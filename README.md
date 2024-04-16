@@ -9,187 +9,187 @@
 ![license](https://img.shields.io/badge/license-MIT-000000.svg)
 ![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)
 
-BOML is a modularized optimization library that unifies several ML algorithms into a common bilevel optimization framework. It provides interfaces to implement popular bilevel optimization algorithms, so that you could quickly build your own meta learning neural network and test its performance.
+[comment]: <> (BOML is a modularized optimization library that unifies several ML algorithms into a common bilevel optimization framework. It provides interfaces to implement popular bilevel optimization algorithms, so that you could quickly build your own meta learning neural network and test its performance.)
 
-ReadMe.md contains brief introduction to implement meta-initialization-based and meta-feature-based methods in few-shot classification field. Except for algorithms which have been proposed, various combinations of lower level and upper level strategies are available. 
+[comment]: <> (ReadMe.md contains brief introduction to implement meta-initialization-based and meta-feature-based methods in few-shot classification field. Except for algorithms which have been proposed, various combinations of lower level and upper level strategies are available. )
 
-## Meta Learning 
+[comment]: <> (## Meta Learning )
 
-Meta learning works fairly well when facing incoming new tasks by learning an initialization with favorable generalization capability. And it also has good performance even provided with a small amount of training data available, which gives birth to various solutions for different application such as few-shot learning problem.
+[comment]: <> (Meta learning works fairly well when facing incoming new tasks by learning an initialization with favorable generalization capability. And it also has good performance even provided with a small amount of training data available, which gives birth to various solutions for different application such as few-shot learning problem.)
 
-We present a general bilevel optimization paradigm to unify different types of meta learning approaches, and the mathematical form could be summarized as below:<br>
+[comment]: <> (We present a general bilevel optimization paradigm to unify different types of meta learning approaches, and the mathematical form could be summarized as below:<br>)
 
-<div align=center>
+[comment]: <> (<div align=center>)
   
-![Bilevel Optimization Model]&#40;https://github.com/dut-media-lab/BOML/blob/master/figures/p1.png&#41;
+[comment]: <> (![Bilevel Optimization Model]&#40;https://github.com/dut-media-lab/BOML/blob/master/figures/p1.png&#41;)
 
-</div>
+[comment]: <> (</div>)
 
-## Generic Optimization Routine
+[comment]: <> (## Generic Optimization Routine)
 
-Here we illustrate the generic optimization process and hierarchically built strategies in the figure, which could be quikcly implemented in the following example.<br>
+[comment]: <> (Here we illustrate the generic optimization process and hierarchically built strategies in the figure, which could be quikcly implemented in the following example.<br>)
 
-<div align=center>
+[comment]: <> (<div align=center>)
   
-![Optimization Routine]&#40;https://github.com/dut-media-lab/BOML/blob/master/figures/p2.png&#41;
+[comment]: <> (![Optimization Routine]&#40;https://github.com/dut-media-lab/BOML/blob/master/figures/p2.png&#41;)
 
-</div>
+[comment]: <> (</div>)
 
-## Documentation 
+[comment]: <> (## Documentation )
 
-For more detailed information of basic function and construction process, please refer to our [Documentation]&#40;https://boml.readthedocs.io&#41; or[Project Page]&#40;https://dut-media-lab.github.io/BOML/&#41;. Scripts in the directory named test_script are useful for constructing general training process.
+[comment]: <> (For more detailed information of basic function and construction process, please refer to our [Documentation]&#40;https://boml.readthedocs.io&#41; or[Project Page]&#40;https://dut-media-lab.github.io/BOML/&#41;. Scripts in the directory named test_script are useful for constructing general training process.)
 
-Here we give recommended settings for specific hyper paremeters to quickly test performance of popular algorithms.
+[comment]: <> (Here we give recommended settings for specific hyper paremeters to quickly test performance of popular algorithms.)
 
-## Running examples
+[comment]: <> (## Running examples)
 
-### Start from loading data
+[comment]: <> (### Start from loading data)
 
-```python
+[comment]: <> (```python)
 
-import boml
+[comment]: <> (import boml)
 
-from boml import utils
+[comment]: <> (from boml import utils)
 
-from test_script.script_helper import *
+[comment]: <> (from test_script.script_helper import *)
 
-dataset = boml.load_data.meta_omniglot&#40;
+[comment]: <> (dataset = boml.load_data.meta_omniglot&#40;)
 
-    std_num_classes=args.classes,
+[comment]: <> (    std_num_classes=args.classes,)
 
-    examples_train=args.examples_train,
+[comment]: <> (    examples_train=args.examples_train,)
 
-    examples_test=args.examples_test,
+[comment]: <> (    examples_test=args.examples_test,)
 
-&#41;
+[comment]: <> (&#41;)
 
-# create instance of BOMLExperiment for ong single task)
+[comment]: <> (# create instance of BOMLExperiment for ong single task)
 
-ex = boml.BOMLExperiment&#40;dataset&#41;
+[comment]: <> (ex = boml.BOMLExperiment&#40;dataset&#41;)
 
-```
+[comment]: <> (```)
 
-### Build network structure and define parameters for meta-learner and base-learner
+[comment]: <> (### Build network structure and define parameters for meta-learner and base-learner)
 
-```python
+[comment]: <> (```python)
 
-boml_ho = boml.BOLVOptimizer&#40;
+[comment]: <> (boml_ho = boml.BOLVOptimizer&#40;)
 
-    method="MetaInit", inner_method="Simple", outer_method="Simple"
+[comment]: <> (    method="MetaInit", inner_method="Simple", outer_method="Simple")
 
-&#41;
+[comment]: <> (&#41;)
 
-meta_learner = boml_ho.meta_learner&#40;_input=ex.x, dataset=dataset, meta_model="V1"&#41;
+[comment]: <> (meta_learner = boml_ho.meta_learner&#40;_input=ex.x, dataset=dataset, meta_model="V1"&#41;)
 
-ex.adapt_model = boml_ho.base_learner&#40;_input=ex.x, meta_learner=meta_learner&#41;
+[comment]: <> (ex.adapt_model = boml_ho.base_learner&#40;_input=ex.x, meta_learner=meta_learner&#41;)
 
-``` 
+[comment]: <> (``` )
 
-### Define LL objectives and LL calculation process
+[comment]: <> (### Define LL objectives and LL calculation process)
 
-```python
+[comment]: <> (```python)
 
-loss_inner = utils.cross_entropy&#40;pred=ex.adapt_model.out, label=ex.y&#41;
+[comment]: <> (loss_inner = utils.cross_entropy&#40;pred=ex.adapt_model.out, label=ex.y&#41;)
 
-accuracy = utils.classification_acc&#40;pred=ex.adapt_model.out, label=ex.y&#41;
+[comment]: <> (accuracy = utils.classification_acc&#40;pred=ex.adapt_model.out, label=ex.y&#41;)
 
-inner_grad = boml_ho.ll_problem&#40;
+[comment]: <> (inner_grad = boml_ho.ll_problem&#40;)
 
-    inner_objective=loss_inner,
+[comment]: <> (    inner_objective=loss_inner,)
 
-    learning_rate=args.lr,
+[comment]: <> (    learning_rate=args.lr,)
 
-    T=args.T,
+[comment]: <> (    T=args.T,)
 
-    experiment=ex,
+[comment]: <> (    experiment=ex,)
 
-    var_list=ex.adapt_model.var_list,
+[comment]: <> (    var_list=ex.adapt_model.var_list,)
 
-&#41;
+[comment]: <> (&#41;)
 
-```
+[comment]: <> (```)
 
-### Define UL objectives and UL calculation process
+[comment]: <> (### Define UL objectives and UL calculation process)
 
-```python
+[comment]: <> (```python)
 
-loss_outer = utils.cross_entropy&#40;pred=ex.adapt_model.re_forward&#40;ex.x_&#41;.out, label=ex.y_&#41;  # loss function
+[comment]: <> (loss_outer = utils.cross_entropy&#40;pred=ex.adapt_model.re_forward&#40;ex.x_&#41;.out, label=ex.y_&#41;  # loss function)
 
-boml_ho.ul_problem&#40;
+[comment]: <> (boml_ho.ul_problem&#40;)
 
-    outer_objective=loss_outer,
+[comment]: <> (    outer_objective=loss_outer,)
 
-    meta_learning_rate=args.meta_lr,
+[comment]: <> (    meta_learning_rate=args.meta_lr,)
 
-    inner_grad=inner_grad,
+[comment]: <> (    inner_grad=inner_grad,)
 
-    meta_param=tf.get_collection&#40;boml.extension.GraphKeys.METAPARAMETERS&#41;,
+[comment]: <> (    meta_param=tf.get_collection&#40;boml.extension.GraphKeys.METAPARAMETERS&#41;,)
 
-&#41;
+[comment]: <> (&#41;)
 
-```
+[comment]: <> (```)
 
-### Aggregate all the defined operations
+[comment]: <> (### Aggregate all the defined operations)
 
-```python
+[comment]: <> (```python)
 
-# Only need to be called once after all the tasks are ready
+[comment]: <> (# Only need to be called once after all the tasks are ready)
 
-boml_ho.aggregate_all&#40;&#41;
+[comment]: <> (boml_ho.aggregate_all&#40;&#41;)
 
-```
+[comment]: <> (```)
 
-### Meta training iteration
+[comment]: <> (### Meta training iteration)
 
-```python
+[comment]: <> (```python)
 
-with tf.Session&#40;&#41; as sess:
+[comment]: <> (with tf.Session&#40;&#41; as sess:)
 
-    tf.global_variables_initializer&#40;&#41;.run&#40;session=sess&#41;
+[comment]: <> (    tf.global_variables_initializer&#40;&#41;.run&#40;session=sess&#41;)
 
-    for itr in range&#40;args.meta_train_iterations&#41;:
+[comment]: <> (    for itr in range&#40;args.meta_train_iterations&#41;:)
 
-        # Generate the feed_dict for calling run&#40;&#41; everytime
+[comment]: <> (        # Generate the feed_dict for calling run&#40;&#41; everytime)
 
-        train_batch = BatchQueueMock&#40;
+[comment]: <> (        train_batch = BatchQueueMock&#40;)
 
-            dataset.train, 1, args.meta_batch_size, utils.get_rand_state&#40;1&#41;
+[comment]: <> (            dataset.train, 1, args.meta_batch_size, utils.get_rand_state&#40;1&#41;)
 
-        &#41;
+[comment]: <> (        &#41;)
 
-        tr_fd, v_fd = utils.feed_dict&#40;train_batch.get_single_batch&#40;&#41;, ex&#41;
+[comment]: <> (        tr_fd, v_fd = utils.feed_dict&#40;train_batch.get_single_batch&#40;&#41;, ex&#41;)
 
-        # Meta training step
+[comment]: <> (        # Meta training step)
 
-        boml_ho.run&#40;tr_fd, v_fd&#41;
+[comment]: <> (        boml_ho.run&#40;tr_fd, v_fd&#41;)
 
-        if itr % 100 == 0:
+[comment]: <> (        if itr % 100 == 0:)
 
-            print&#40;sess.run&#40;loss_inner, utils.merge_dicts&#40;tr_fd, v_fd&#41;&#41;&#41;
+[comment]: <> (            print&#40;sess.run&#40;loss_inner, utils.merge_dicts&#40;tr_fd, v_fd&#41;&#41;&#41;)
 
-```
+[comment]: <> (```)
 
-## Related Methods 
+[comment]: <> (## Related Methods )
 
- - [Hyperparameter optimization with approximate gradient&#40;HOAG&#41;]&#40;https://arxiv.org/abs/1602.02355&#41;
+[comment]: <> ( - [Hyperparameter optimization with approximate gradient&#40;HOAG&#41;]&#40;https://arxiv.org/abs/1602.02355&#41;)
 
- - [Model-Agnostic Meta-Learning for Fast Adaptation of Deep Networks&#40;MAML&#41;]&#40;https://arxiv.org/abs/1703.03400&#41;
+[comment]: <> ( - [Model-Agnostic Meta-Learning for Fast Adaptation of Deep Networks&#40;MAML&#41;]&#40;https://arxiv.org/abs/1703.03400&#41;)
 
- - [On First-Order Meta-Learning Algorithms&#40;FMAML&#41;]&#40;https://arxiv.org/abs/1703.03400&#41;
+[comment]: <> ( - [On First-Order Meta-Learning Algorithms&#40;FMAML&#41;]&#40;https://arxiv.org/abs/1703.03400&#41;)
 
- - [Meta-SGD: Learning to Learn Quickly for Few-Shot Learning&#40;Meta-SGD&#41;]&#40;https://arxiv.org/pdf/1707.09835.pdf&#41;
+[comment]: <> ( - [Meta-SGD: Learning to Learn Quickly for Few-Shot Learning&#40;Meta-SGD&#41;]&#40;https://arxiv.org/pdf/1707.09835.pdf&#41;)
 
- - [Bilevel Programming for Hyperparameter Optimization and Meta-Learning&#40;RHG&#41;]&#40;http://export.arxiv.org/pdf/1806.04910&#41;
+[comment]: <> ( - [Bilevel Programming for Hyperparameter Optimization and Meta-Learning&#40;RHG&#41;]&#40;http://export.arxiv.org/pdf/1806.04910&#41;)
 
- - [Truncated Back-propagation for Bilevel Optimization&#40;TG&#41;]&#40;https://arxiv.org/pdf/1810.10667.pdf&#41;
+[comment]: <> ( - [Truncated Back-propagation for Bilevel Optimization&#40;TG&#41;]&#40;https://arxiv.org/pdf/1810.10667.pdf&#41;)
 
- - [Gradient-Based Meta-Learning with Learned Layerwise Metric and Subspace&#40;MT-net&#41;]&#40;http://proceedings.mlr.press/v80/lee18a/lee18a.pdf&#41;
+[comment]: <> ( - [Gradient-Based Meta-Learning with Learned Layerwise Metric and Subspace&#40;MT-net&#41;]&#40;http://proceedings.mlr.press/v80/lee18a/lee18a.pdf&#41;)
 
- - [Meta-Learning with warped gradient Descent&#40;WarpGrad&#41;&#41;]&#40;https://arxiv.org/abs/1909.00025&#41;
+[comment]: <> ( - [Meta-Learning with warped gradient Descent&#40;WarpGrad&#41;&#41;]&#40;https://arxiv.org/abs/1909.00025&#41;)
 
- - [DARTS: Differentiable Architecture Search&#40;DARTS&#41;]&#40;https://arxiv.org/pdf/1806.09055.pdf&#41;
+[comment]: <> ( - [DARTS: Differentiable Architecture Search&#40;DARTS&#41;]&#40;https://arxiv.org/pdf/1806.09055.pdf&#41;)
 
- - [A Generic First-Order Algorithmic Framework for Bi-Level Programming Beyond Lower-Level Singleton&#40;BDA&#41;]&#40;https://arxiv.org/pdf/2006.04045.pdf&#41;
+[comment]: <> ( - [A Generic First-Order Algorithmic Framework for Bi-Level Programming Beyond Lower-Level Singleton&#40;BDA&#41;]&#40;https://arxiv.org/pdf/2006.04045.pdf&#41;)
 
 
 
